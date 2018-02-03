@@ -3,10 +3,11 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
 export default class App extends React.Component {
-  addLine(name, value) {
+  addLine(name, value, type = "") {
     return (
       <View key={name}>
         <Text style={styles.name}>DeviceInfo.{name}():</Text>
+        <Text style={styles.type}>{type}:</Text>
         <Text>{value}</Text>
       </View>
     );
@@ -50,13 +51,14 @@ export default class App extends React.Component {
     for (let i = 0; i < methods.length; i++) {
       if (DeviceInfo[methods[i]]) {
         try {
-          ret.push(this.addLine(methods[i], DeviceInfo[methods[i]]()));
+          let value = DeviceInfo[methods[i]]();
+          let type = typeof value;
+          if (type === "boolean") {
+            value = value ? "true" : "false";
+          }
+          ret.push(this.addLine(methods[i], value, type));
         } catch (e) {
-          console.log(e);
-          const a = typeof e;
-          ret.push(
-            this.addLine(methods[i], `⚠️ Exception thrown: ${e.message}`)
-          );
+          ret.push(this.addLine(methods[i], `⚠️ ${e.message}`));
         }
       } else {
         ret.push(
@@ -91,6 +93,10 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: "bold",
-    marginRight: 5
+    marginRight: 5,
+    paddingTop: 10
+  },
+  type: {
+    color: "green"
   }
 });
