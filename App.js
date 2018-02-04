@@ -2,13 +2,25 @@ import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
+const objToString = obj => {
+  var str = "";
+  for (var p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      str += p + "::" + obj[p] + "\n";
+    }
+  }
+  return str;
+};
+
 export default class App extends React.Component {
   addLine(name, value, type = "") {
     return (
-      <View key={name}>
-        <Text style={styles.name}>DeviceInfo.{name}():</Text>
-        <Text style={styles.type}>{type}:</Text>
-        <Text>{value}</Text>
+      <View key={name} style={styles.line}>
+        <Text>
+          <Text style={styles.type}>{type} </Text>
+          <Text style={styles.name}>{name}(): </Text>
+          {type !== "undefined" && <Text>{value}</Text>}
+        </Text>
       </View>
     );
   }
@@ -41,8 +53,6 @@ export default class App extends React.Component {
       "getFirstInstallTime",
       "getLastUpdateTime",
       "getSerialNumber",
-      "getIPAddress",
-      "getMACAddress",
       "getCarrier",
       "getTotalMemory",
       "getMaxMemory",
@@ -53,8 +63,12 @@ export default class App extends React.Component {
         try {
           let value = DeviceInfo[methods[i]]();
           let type = typeof value;
-          if (type === "boolean") {
+          if (value === null) {
+            value = <Text style={styles.null}>null</Text>;
+          } else if (type === "boolean") {
             value = value ? "true" : "false";
+          } else if (type == "object") {
+            value = objToString(value);
           }
           ret.push(this.addLine(methods[i], value, type));
         } catch (e) {
@@ -72,7 +86,13 @@ export default class App extends React.Component {
     return ret;
   }
 
+  componentWillMount() {
+    //this.setState({ ip: false });
+    // DeviceInfo.getIPAddress().then(ip => this.setState({ ip }));
+  }
+
   render() {
+    // const { ip } = this.state;
     return (
       <View style={styles.container}>
         <ScrollView>{this.renderInfo()}</ScrollView>
@@ -86,17 +106,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 5,
-    paddingTop: 40
+    paddingTop: 20
   },
   line: {
-    flexDirection: "row"
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingTop: 5,
+    paddingBottom: 5
   },
   name: {
     fontWeight: "bold",
-    marginRight: 5,
-    paddingTop: 10
+    marginRight: 5
   },
   type: {
     color: "green"
+  },
+  null: {
+    fontStyle: "italic"
   }
 });
