@@ -19,7 +19,7 @@ export default class App extends React.Component {
         <Text>
           <Text style={styles.type}>{type} </Text>
           <Text style={styles.name}>{name}(): </Text>
-          {type !== "undefined" && <Text>{value}</Text>}
+          {type !== "undefined" && <Text style={styles.value}>{value}</Text>}
         </Text>
       </View>
     );
@@ -101,6 +101,7 @@ export default class App extends React.Component {
   }
 }
 
+const fontSize = 9;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -116,12 +117,18 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: "bold",
-    marginRight: 5
+    marginRight: 5,
+    fontSize
   },
   type: {
-    color: "green"
+    color: "green",
+    fontSize
   },
   null: {
-    fontStyle: "italic"
+    fontStyle: "italic",
+    fontSize
+  },
+  value: {
+    fontSize
   }
 });
