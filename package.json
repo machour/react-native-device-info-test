@@ -19,6 +19,6 @@
   "dependencies": {
     "react": "16.2.0",
     "react-native": "0.52.0",
-    "react-native-device-info": "^0.14.0"
+    "react-native-device-info": "https://github.com/rebeccahughes/react-native-device-info#master"
   }
 }

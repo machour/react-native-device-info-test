@@ -2906,6 +2906,10 @@ react-native-device-info@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.14.0.tgz#b77d0368e197c7a6fc8de612f8272d3526847bd4"
 
+"react-native-device-info@https://github.com/rebeccahughes/react-native-device-info#master":
+  version "0.14.0"
+  resolved "https://github.com/rebeccahughes/react-native-device-info#51d14de1841b6cab5fe5653f00241e35ff86b86b"
+
 react-native@0.52.0:
   version "0.52.0"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.52.0.tgz#9784663a2aa40b30c87d4c9c06ef26cf8d419d91"

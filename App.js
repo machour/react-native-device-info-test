@@ -28,6 +28,8 @@ export default class App extends React.Component {
   renderInfo() {
     const ret = [];
     const methods = [
+      "getFreeDiskStorage",
+      "getTotalDiskCapacity",
       "getUniqueID",
       "getManufacturer",
       "getBrand",
