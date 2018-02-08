@@ -28,37 +28,38 @@ export default class App extends React.Component {
   renderInfo() {
     const ret = [];
     const methods = [
-      "getFreeDiskStorage",
-      "getTotalDiskCapacity",
-      "getUniqueID",
-      "getManufacturer",
-      "getBrand",
-      "getModel",
-      "getDeviceId",
-      "is24Hour",
-      "getSystemName",
-      "getSystemVersion",
-      "getBundleId",
-      "getBuildNumber",
-      "getVersion",
-      "getReadableVersion",
-      "getDeviceName",
-      "getUserAgent",
-      "getDeviceLocale",
-      "getDeviceCountry",
-      "getTimezone",
-      "isEmulator",
-      "isTablet",
-      "getAPILevel",
-      "getInstanceID",
-      "getPhoneNumber",
-      "getFirstInstallTime",
-      "getLastUpdateTime",
-      "getSerialNumber",
-      "getCarrier",
-      "getTotalMemory",
-      "getMaxMemory",
-      "getApplicationName"
+      "getAPILevel", // 0.12.0
+      "getApplicationName", // 0.14.0
+      "getBrand", // 0.9.3
+      "getBuildNumber", // ?
+      "getBundleId", // ?
+      "getCarrier", // 0.13.0
+      "getDeviceCountry", // 0.9.0
+      "getDeviceId", // 0.5.0
+      "getDeviceLocale", // 0.7.0
+      "getDeviceName", // ?
+      "getFirstInstallTime", // 0.12.0
+      "getFontScale", // 0.15.0
+      "getFreeDiskStorage", // 0.15.0
+      "getInstanceID", // ?
+      "getLastUpdateTime", // 0.12.0
+      "getManufacturer", // ?
+      "getMaxMemory", // 0.14.0
+      "getModel", // ?
+      "getPhoneNumber", // 0.12.0
+      "getReadableVersion", // ?
+      "getSerialNumber", // 0.12.0
+      "getSystemName", // ?
+      "getSystemVersion", // ?
+      "getTimezone", // ?
+      "getTotalDiskCapacity", // 0.15.0
+      "getTotalMemory", // 0.14.0
+      "getUniqueID", // ?
+      "getUserAgent", // 0.7.0
+      "getVersion", // ?
+      "is24Hour", // 0.13.0
+      "isEmulator", // ?
+      "isTablet" // ?
     ];
     for (let i = 0; i < methods.length; i++) {
       if (DeviceInfo[methods[i]]) {
