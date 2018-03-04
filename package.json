@@ -1,11 +1,12 @@
 {
-  "name": "react-native-device-info-test",
+  "name": "rnditest",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
     "babel-preset-react-native-stage-0": "^1.0.1",
     "jest-react-native": "^18.0.0",
-    "react-test-renderer": "16.2.0"
+    "react-test-renderer": "16.2.0",
+    "rnpm-plugin-windows": "^0.2.8"
   },
   "scripts": {
     "start": "react-native start",
@@ -19,6 +20,7 @@
   "dependencies": {
     "react": "16.2.0",
     "react-native": "0.52.0",
-    "react-native-device-info": "https://github.com/rebeccahughes/react-native-device-info#master"
+    "react-native-device-info": "https://github.com/rebeccahughes/react-native-device-info#master",
+    "react-native-windows": "0.52.0-rc.3"
   }
 }
