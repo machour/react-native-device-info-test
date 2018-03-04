@@ -3,3 +3,5 @@ This is a playground for [rebeccahughes/react-native-device-info](https://github
 | Android                 | iOS              | Windows |
 | ----------------------- | ---------------- | ----- |
 | ![android](android.png) |  ![ios](ios.png) | ![windows](windows.png) |
+
+
