@@ -12,6 +12,59 @@ const objToString = obj => {
   return str;
 };
 
+const API = [
+  {name: "getAPILevel", type: 'direct'},
+  {name: "getApplicationName", type: 'direct'},
+  {name: "getBrand", type: 'direct'},
+  {name: "getBuildNumber", type: 'direct'},
+  {name: "getBundleId", type: 'direct'},
+  {name: "getCarrier", type: 'direct'},
+  {name: "getDeviceCountry", type: 'direct'},
+  {name: "getDeviceId", type: 'direct'},
+  {name: "getDeviceLocale", type: 'direct'},
+  {name: "getDeviceName", type: 'direct'},
+  {name: "getFirstInstallTime", type: 'direct'},
+  {name: "getFontScale", type: 'direct'},
+  {name: "getFreeDiskStorage", type: 'direct'},
+  {name: "getInstanceID", type: 'direct'},
+  {name: "getIPAddress", type: 'promise'},
+  {name: "getLastUpdateTime", type: 'direct'},
+  {name: "getMACAddress", type: 'promise'},
+  {name: "getManufacturer", type: 'direct'},
+  {name: "getMaxMemory", type: 'direct'},
+  {name: "getModel", type: 'direct'},
+  {name: "getPhoneNumber", type: 'direct'},
+  {name: "getReadableVersion", type: 'direct'},
+  {name: "getSerialNumber", type: 'direct'},
+  {name: "getSystemName", type: 'direct'},
+  {name: "getSystemVersion", type: 'direct'},
+  {name: "getTimezone", type: 'direct'},
+  {name: "getTotalDiskCapacity", type: 'direct'},
+  {name: "getTotalMemory", type: 'direct'},
+  {name: "getUniqueID", type: 'direct'},
+  {name: "getUserAgent", type: 'direct'},
+  {name: "getVersion", type: 'direct'},
+  {name: "is24Hour", type: 'direct'},
+  {name: "isEmulator", type: 'direct'},
+  {name: "isTablet", type: 'direct'},
+  {name: "isPinOrFingerprintSet", type: 'callback'}
+];
+
+const formatValue = (value, type) => {
+  if (value === null) {
+    return <Text style={styles.null}>null</Text>;
+  }
+  if (type === "boolean") {
+    return value ? "true" : "false";
+  }
+  
+  if (type == "object") {
+    return objToString(value);
+  }
+
+  return value;
+}
+
 export default class App extends React.Component {
   addLine(name, value, type = "") {
     return (
@@ -27,84 +80,86 @@ export default class App extends React.Component {
 
   renderInfo() {
     const ret = [];
-    const methods = [
-      "getAPILevel", // 0.12.0
-      "getApplicationName", // 0.14.0
-      "getBrand", // 0.9.3
-      "getBuildNumber", // ?
-      "getBundleId", // ?
-      "getCarrier", // 0.13.0
-      "getDeviceCountry", // 0.9.0
-      "getDeviceId", // 0.5.0
-      "getDeviceLocale", // 0.7.0
-      "getDeviceName", // ?
-      "getFirstInstallTime", // 0.12.0
-      "getFontScale", // 0.15.0
-      "getFreeDiskStorage", // 0.15.0
-      "getInstanceID", // ?
-      "getLastUpdateTime", // 0.12.0
-      "getManufacturer", // ?
-      "getMaxMemory", // 0.14.0
-      "getModel", // ?
-      "getPhoneNumber", // 0.12.0
-      "getReadableVersion", // ?
-      "getSerialNumber", // 0.12.0
-      "getSystemName", // ?
-      "getSystemVersion", // ?
-      "getTimezone", // ?
-      "getTotalDiskCapacity", // 0.15.0
-      "getTotalMemory", // 0.14.0
-      "getUniqueID", // ?
-      "getUserAgent", // 0.7.0
-      "getVersion", // ?
-      "is24Hour", // 0.13.0
-      "isEmulator", // ?
-      "isTablet" // ?
-    ];
-    for (let i = 0; i < methods.length; i++) {
-      if (DeviceInfo[methods[i]]) {
-        try {
-          let value = DeviceInfo[methods[i]]();
-          let type = typeof value;
-          if (value === null) {
-            value = <Text style={styles.null}>null</Text>;
-          } else if (type === "boolean") {
-            value = value ? "true" : "false";
-          } else if (type == "object") {
-            value = objToString(value);
+
+    API.forEach(method => {
+      switch (method.type) {
+        case 'direct':
+          try {
+            let value = DeviceInfo[method.name]();
+            let type = typeof value;
+            
+            ret.push(this.addLine(method.name, formatValue(value, type), type));
+          } catch (e) {
+            ret.push(this.addLine(method.name, `⚠️ ${e.message}`));
           }
-          ret.push(this.addLine(methods[i], value, type));
-        } catch (e) {
-          ret.push(this.addLine(methods[i], `⚠️ ${e.message}`));
-        }
-      } else {
-        ret.push(
-          this.addLine(
-            methods[i],
-            `⚠️ DeviceInfo.${methods[i]} don\'t exist on`
-          )
-        );
+        break;
+
+        case 'callback':
+        case 'promise':
+          const value = this.state[method.name];
+          if (value === 'fetching...') {
+            ret.push(this.addLine(method.name, 'Loading...', '?'));
+          } else {
+            const type = typeof value;
+            ret.push(this.addLine(method.name, formatValue(value, type), type));
+          }
+        break;
+
+        
       }
-    }
+    });
+
     return ret;
   }
 
   componentWillMount() {
-    //this.setState({ ip: false });
-    // DeviceInfo.getIPAddress().then(ip => this.setState({ ip }));
+    console.log('mounting');
+
+    const state = {};
+    API.forEach(method => {
+      switch (method.type) {
+        case 'callback':
+        case 'promise':
+          state[method.name] = "fetching...";
+        break;
+      }
+    });
+
+    this.setState(state);
+
+    API.forEach(method => {
+      switch (method.type) {
+        case 'callback':
+          DeviceInfo[method.name]()(value => {
+            const obj = {};
+            obj[method.name] = value;
+            this.setState(obj);
+          });
+        break;
+        case 'promise':
+          DeviceInfo[method.name]().then(value => {
+            const obj = {};
+            obj[method.name] = value;
+            this.setState(obj);
+          });
+        break;
+      }
+    });
+
   }
 
   render() {
-    // const { ip } = this.state;
     return (
       <View style={styles.container}>
-        <ScrollView>{this.renderInfo()}</ScrollView>
+        <ScrollView>
+          {this.renderInfo()}
+        </ScrollView>
       </View>
     );
   }
 }
 
-const fontSize = 9;
+const fontSize = 15;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
